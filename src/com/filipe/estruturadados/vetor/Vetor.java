@@ -14,6 +14,9 @@ public class Vetor {
 
 	// Adiciona um elemento no vetor.
 	public boolean adiciona(String elemento) {
+		
+		this.aumentaCapacidade();
+		
 		if (this.tamanho < this.elementos.length) {
 			this.elementos[this.tamanho] = elemento;
 			this.tamanho++;
@@ -21,20 +24,61 @@ public class Vetor {
 		}
 		return false;
 	}
+
+	// Adiciona um elemento em qualquer posição do vetor.
+	public boolean adiciona(int posicao, String elemento) {
+
+		if (!(posicao >= 0 && posicao < tamanho)) {
+			throw new IllegalArgumentException("Posição inválida.");
+		}
+		
+		this.aumentaCapacidade();
+
+		// Move todos os elementos.
+		for (int i = this.tamanho - 1; i >= posicao; i--) {
+			this.elementos[i + 1] = this.elementos[i];
+		}
+
+		this.elementos[posicao] = elemento;
+		this.tamanho++;
+
+		return false;
+	}
 	
-	// Obtem um elemento de uma posicao do vetor.	
+	// Aumenta capacidade do vetor.
+	private void aumentaCapacidade() {
+		if(this.tamanho == this.elementos.length) {
+			String[] elementosNovos = new String[this.elementos.length * 2];
+			for(int i = 0; i < this.elementos.length; i++) {
+				elementosNovos[i] = this.elementos[i];
+			}
+			this.elementos = elementosNovos;
+		}
+	}
+
+	// Obtem um elemento de uma posicao do vetor.
 	public String busca(int posicao) {
-		if(!(posicao >= 0 && posicao < tamanho)) {
+		if (!(posicao >= 0 && posicao < tamanho)) {
 			throw new IllegalArgumentException("Posição inválida.");
 		}
 		return this.elementos[posicao];
 	}
-	
+
+	// Verifica se um elemento existe em um vetor.
+	public int busca(String elemento) {
+		for (int i = 0; i < this.tamanho; i++) {
+			if (this.elementos[i].equals(elemento)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	// Retorna o tamanho do vetor.
 	public int tamanho() {
 		return this.tamanho;
 	}
-	
+
 	// Imprime somente os elementos do vetor.
 	@Override
 	public String toString() {
@@ -42,17 +86,17 @@ public class Vetor {
 		StringBuilder s = new StringBuilder();
 		s.append("[");
 
-		for(int i = 0; i < this.tamanho -1; i ++) {
+		for (int i = 0; i < this.tamanho - 1; i++) {
 			s.append(this.elementos[i]);
 			s.append(", ");
 		}
 
-		if(this.tamanho > 0) {
-			s.append(elementos[this.tamanho -1]);
+		if (this.tamanho > 0) {
+			s.append(elementos[this.tamanho - 1]);
 		}
-		
+
 		s.append("]");
-		
+
 		return s.toString();
 	}
 }
